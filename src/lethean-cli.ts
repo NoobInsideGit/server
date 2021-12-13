@@ -10,6 +10,7 @@ import {RouteDaemonChainExport} from './routes/daemon/chain/export.view.ts';
 import {RouteDaemonChainImport} from './routes/daemon/chain/import.view.ts';
 import {RouteDaemonWalletRpc} from './routes/daemon/wallet/rpc.view.ts';
 import {RouteConfig} from './routes/config.view.ts';
+import {StringResponse} from './interfaces/string-response.ts';
 
 export class LetheanCli {
 
@@ -26,6 +27,23 @@ export class LetheanCli {
       .description("Command line interface for Lethean")
       .command("daemon", new Command().description("Lethean Binary Control")
           .command("chain", new Command().description("Lethean Binary Control")
+              .command('json_rpc')
+              .description('Talk to the Daemon RPC via the json_rpc endpoint')
+              .option('-r,--request <string>', 'payload to send')
+              .action(async (args) => {
+                //console.log(args.request.slice(1, args.request.length-1))
+                const postReq = await fetch('http://localhost:48782/json_rpc', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: args.request.slice(1, args.request.length-1),
+                })
+                // console.log(await postReq.text())
+                if (Deno.env.get('REST')) {
+                  throw new StringResponse(await postReq.text());
+                }
+              })
               .command("start", RouteDaemonChainStart.config())
               .command('export', RouteDaemonChainExport.config())
               .command('import', RouteDaemonChainImport.config()))
