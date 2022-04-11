@@ -43,7 +43,7 @@ jobs:
         with:
           files: lethean-server.exe
           dest: ${{ matrix.type }}.zip
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.type }}
           path: ${{ matrix.type }}.zip
