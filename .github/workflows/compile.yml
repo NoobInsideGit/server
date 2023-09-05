@@ -25,7 +25,7 @@ jobs:
       matrix:
         type: [ linux, macos-intel, macos-arm, windows ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.18.x
